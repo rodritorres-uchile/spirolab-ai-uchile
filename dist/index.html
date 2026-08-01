@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#061525">
+<title>SpiroLab AI-UCH</title>
+<meta name="description" content="Simulador docente avanzado de espirometría y función pulmonar.">
+<style>:root{--bg:#06111f;--panel:#0b1d31;--panel2:#102942;--line:#24445f;--text:#e8f4ff;--muted:#91abc0;--cyan:#36d5ed;--blue:#4a8dff;--green:#39d98a;--yellow:#ffcc66;--red:#ff6b79;--shadow:0 18px 55px rgba(0,0,0,.32)}*{box-sizing:border-box}html,body,#app{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(circle at 15% 0,#103252 0,transparent 30%),var(--bg);color:var(--text)}button,input,select{font:inherit}button{cursor:pointer}.shell{min-height:100vh}.topbar{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:1px solid #17324a;background:rgba(4,16,29,.88);backdrop-filter:blur(16px);position:sticky;top:0;z-index:20}.brand{display:flex;gap:13px;align-items:center}.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--cyan),var(--blue));display:grid;place-items:center;color:#03121f;font-weight:900;box-shadow:0 0 30px rgba(54,213,237,.28)}.brand h1{font-size:18px;margin:0}.brand small{color:var(--muted)}.top-actions{display:flex;gap:8px}.btn{border:1px solid #294965;background:#10253a;color:var(--text);padding:9px 13px;border-radius:10px}.btn.primary{background:linear-gradient(135deg,var(--cyan),var(--blue));color:#03121f;border:0;font-weight:800}.workspace{display:grid;grid-template-columns:300px minmax(0,1fr) 330px;gap:14px;padding:14px;max-width:1800px;margin:auto}.panel{background:linear-gradient(180deg,rgba(15,41,66,.96),rgba(8,26,44,.96));border:1px solid #1e3b55;border-radius:16px;box-shadow:var(--shadow)}.sidebar{padding:16px;height:calc(100vh - 100px);position:sticky;top:86px;overflow:auto}.section-title{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);font-weight:800;margin:14px 0 10px}.field{margin-bottom:11px}.field label{display:flex;justify-content:space-between;font-size:12px;color:#b9cede;margin-bottom:6px}.field input,.field select{width:100%;border:1px solid #294861;background:#071828;color:var(--text);border-radius:9px;padding:9px}.field input[type=range]{padding:0;accent-color:var(--cyan)}.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.preset{padding:8px;border-radius:9px;border:1px solid #294861;background:#0a2034;color:#c8deed;font-size:11px}.preset.active{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 0 1px rgba(54,213,237,.2)}.main{display:flex;flex-direction:column;gap:14px}.hero{padding:18px;display:flex;justify-content:space-between;align-items:center}.hero h2{margin:0 0 4px;font-size:20px}.hero p{margin:0;color:var(--muted);font-size:13px}.status{padding:7px 10px;border-radius:999px;font-size:11px;font-weight:800;background:rgba(57,217,138,.13);color:var(--green);border:1px solid rgba(57,217,138,.35)}.charts{display:grid;grid-template-columns:1fr 1fr;gap:14px}.chart-card{padding:14px}.chart-head{display:flex;justify-content:space-between;margin-bottom:8px}.chart-head strong{font-size:13px}.chart-head span{font-size:11px;color:var(--muted)}svg{width:100%;height:315px;display:block;background:linear-gradient(180deg,#071827,#06131f);border-radius:12px;border:1px solid #18354d}.grid-line{stroke:#173149;stroke-width:1}.axis{stroke:#6e8ba1;stroke-width:1.2}.curve{fill:none;stroke:var(--cyan);stroke-width:3;filter:drop-shadow(0 0 5px rgba(54,213,237,.45))}.curve-secondary{fill:none;stroke:var(--blue);stroke-width:2.5}.point{fill:#06131f;stroke:var(--yellow);stroke-width:2}.axis-label{fill:#8ba7ba;font-size:10px}.metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}.metric{padding:13px}.metric .name{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.metric .value{font-size:23px;font-weight:800;margin-top:4px}.metric .sub{font-size:10px;color:#90aec1}.tabs{display:flex;gap:5px;padding:7px}.tab{flex:1;padding:9px;border:0;background:transparent;color:var(--muted);border-radius:9px}.tab.active{background:#12304b;color:var(--cyan)}.content-panel{padding:16px;min-height:220px}.rightbar{display:flex;flex-direction:column;gap:14px}.interpretation{padding:17px}.result-badge{display:inline-flex;padding:7px 10px;border-radius:9px;background:rgba(255,204,102,.12);color:var(--yellow);border:1px solid rgba(255,204,102,.35);font-size:12px;font-weight:800}.interpretation h3{font-size:17px;margin:13px 0 8px}.interpretation p{color:#b4cada;font-size:12px;line-height:1.55}.table{width:100%;border-collapse:collapse;font-size:11px}.table th,.table td{padding:8px;border-bottom:1px solid #1e3a52;text-align:right}.table th:first-child,.table td:first-child{text-align:left}.solver{padding:16px}.solver-row{display:flex;justify-content:space-between;font-size:11px;margin:8px 0;color:#b9cede}.bar{height:7px;background:#061521;border-radius:10px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--blue))}.notice{padding:11px;border:1px solid #294861;border-radius:10px;color:var(--muted);font-size:11px;line-height:1.45;background:#071827}.switchline{display:flex;align-items:center;justify-content:space-between;padding:9px 0}.switch{width:42px;height:24px;border-radius:99px;background:#263f53;position:relative}.switch:after{content:"";width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:3px;left:3px;transition:.2s}.switch.on{background:var(--cyan)}.switch.on:after{left:21px}.advanced-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.case-card{border:1px solid #294861;border-radius:12px;padding:12px;background:#081c2e}.case-card strong{display:block;margin-bottom:5px}.case-card span{color:var(--muted);font-size:11px}.footer{padding:12px 20px;color:#6e8ba1;font-size:10px;text-align:center}@media(max-width:1250px){.workspace{grid-template-columns:270px 1fr}.rightbar{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr}.metrics{grid-template-columns:repeat(3,1fr)}}@media(max-width:820px){.workspace{display:block}.sidebar{position:static;height:auto;margin-bottom:14px}.charts{grid-template-columns:1fr}.rightbar{display:block}.rightbar>*{margin-top:14px}.metrics{grid-template-columns:repeat(2,1fr)}.topbar{padding:0 12px}.brand small{display:none}}
+</style>
+</head>
+<body>
+<noscript><div style="padding:2rem;background:#06111f;color:white;font-family:system-ui">SpiroLab AI-UCH necesita JavaScript activado.</div></noscript>
+<div id="app"></div>
+<script>const systems={
+  gli2022:{label:'GLI 2022 Global',groups:['Global']},
+  gli2012:{label:'GLI 2012',groups:['Caucásico','Afroamericano','Asiático nororiental','Asiático sudoriental','Otro/mixto']},
+  knudson:{label:'Knudson',groups:['Referencia original']},
+  gutierrez:{label:'Gutiérrez (Chile)',groups:['Población chilena']}
+};
+const ethnicFactors={'Caucásico':1,'Afroamericano':.88,'Asiático nororiental':.94,'Asiático sudoriental':.91,'Otro/mixto':.96,'Global':1,'Referencia original':1,'Población chilena':1};
+function predict({age,height,sex,system,group}){
+  const male=sex==='M'; const h=height/100; const ef=ethnicFactors[group]??1;
+  let fvc,fev1,ratio,pef;
+  if(system==='gutierrez'){
+    fvc=(male?5.35:3.65)*(h/1.70)**2.25*(1-Math.max(0,age-25)*.0062);
+    fev1=fvc*(male?.79:.81)*(1-Math.max(0,age-30)*.0018);
+  }else if(system==='knudson'){
+    fvc=(male?5.15:3.55)*(h/1.70)**2.35*(1-Math.max(0,age-25)*.0068);
+    fev1=fvc*(male?.78:.80)*(1-Math.max(0,age-25)*.0019);
+  }else if(system==='gli2012'){
+    fvc=(male?5.05:3.55)*(h/1.70)**2.45*Math.exp(-Math.max(0,age-25)*.0060)*ef;
+    fev1=fvc*(male?.80:.82)*Math.exp(-Math.max(0,age-25)*.0019);
+  }else{
+    fvc=(male?5.10:3.60)*(h/1.70)**2.40*Math.exp(-Math.max(0,age-25)*.0058);
+    fev1=fvc*(male?.80:.82)*Math.exp(-Math.max(0,age-25)*.0018);
+  }
+  if(age<18){const growth=clamp((age-3)/15,.08,1);fvc*=growth;fev1*=growth;}
+  ratio=fev1/fvc; pef=(male?9.6:7.1)*(h/1.70)**2*(1-Math.max(0,age-35)*.004);
+  const sd={fvc:fvc*.12,fev1:fev1*.12,ratio:.055,pef:pef*.18};
+  return {fvc,fev1,ratio,pef,sd,lln:{fvc:fvc-1.645*sd.fvc,fev1:fev1-1.645*sd.fev1,ratio:ratio-1.645*sd.ratio,pef:pef-1.645*sd.pef}};
+}
+export const z=(measured,pred,sd)=>(measured-pred)/sd;
+
+function rawFlow(x,p){
+  const [a,b,c]=p; const poly=Math.max(.025,1+b*x+c*x*x);
+  return Math.max(.003,Math.pow(Math.max(0,1-x),a)*poly);
+}
+function normalizeFlow(x,p,pef){return x>=1?0:pef*rawFlow(x,p)/rawFlow(0,p)}
+function integrateTimeline(fvc,pef,p,n=1300){
+  const arr=[{v:0,t:0,q:pef}];let t=0;const dv=fvc/n;
+  for(let i=1;i<=n;i++){const v=i*dv,x=v/fvc;const q=Math.max(.025,normalizeFlow(x,p,pef));t+=dv/q;arr.push({v,t,q:x>=1?0:q});}
+  return arr;
+}
+function volumeAtTime(timeline,target){
+  for(let i=1;i<timeline.length;i++)if(timeline[i].t>=target){const a=timeline[i-1],b=timeline[i];const u=(target-a.t)/(b.t-a.t);return a.v+u*(b.v-a.v)}
+  return timeline.at(-1).v;
+}
+function evaluate(input,p){
+  const tl=integrateTimeline(input.fvc,input.pef,p); const generatedFEV1=volumeAtTime(tl,1);
+  const generated={fef25:normalizeFlow(.25,p,input.pef),fef50:normalizeFlow(.50,p,input.pef),fef75:normalizeFlow(.75,p,input.pef)};
+  const e1=(generatedFEV1-input.fev1)/Math.max(.2,input.fev1);
+  const ef25=(generated.fef25-input.fef25)/Math.max(.4,input.fef25);
+  const ef50=(generated.fef50-input.fef50)/Math.max(.4,input.fef50);
+  const ef75=(generated.fef75-input.fef75)/Math.max(.3,input.fef75);
+  const regular=Math.max(0,-(1+p[1]*.25+p[2]*.0625))**2+Math.max(0,-(1+p[1]*.5+p[2]*.25))**2;
+  return {loss:80*e1*e1+5*ef25*ef25+3*ef50*ef50+2*ef75*ef75+20*regular,tl,generatedFEV1,generated};
+}
+function solveCurve(input){
+  let p=[1.4,-.25,.05],best=evaluate(input,p),iterations=0;let steps=[.7,.7,.7];
+  for(let epoch=0;epoch<18;epoch++){
+    let improved=false;
+    for(let j=0;j<3;j++)for(const dir of [-1,1]){const cand=[...p];cand[j]+=steps[j]*dir;cand[0]=clamp(cand[0],.25,8);cand[1]=clamp(cand[1],-3,3);cand[2]=clamp(cand[2],-3,4);const ev=evaluate(input,cand);iterations++;if(ev.loss<best.loss){p=cand;best=ev;improved=true;}}
+    if(!improved)steps=steps.map(s=>s*.55);
+  }
+  const exp=[];for(let i=0;i<=220;i++){const v=input.fvc*i/220;exp.push({v,q:i===220?0:normalizeFlow(i/220,p,input.pef)});}
+  const insp=[];for(let i=0;i<=90;i++){const u=i/90;insp.push({v:input.fvc*(1-u),q:-input.pif*Math.sin(Math.PI*u)**.72});}
+  const fet=best.tl.at(-1).t;
+  return {params:p,exp,insp,timeline:best.tl,generatedFEV1:best.generatedFEV1,generatedFEFs:best.generated,fet,loss:best.loss,iterations,coherence:Math.max(0,100-Math.sqrt(best.loss)*7)};
+}
+
+function interpret(m,p){
+  const obstruction=m.ratio<p.lln.ratio, lowFvc=m.fvc<p.lln.fvc;
+  if(obstruction&&lowFvc)return {title:'Patrón mixto probable',detail:'VEF₁/CVF bajo y CVF bajo. Puede corresponder a defecto mixto o a obstrucción con atrapamiento aéreo; confirmar con TLC.',tone:'yellow'};
+  if(obstruction)return {title:'Patrón ventilatorio obstructivo',detail:'El cociente VEF₁/CVF se encuentra bajo el límite inferior de normalidad.',tone:'red'};
+  if(lowFvc)return {title:'Restricción probable / patrón no específico',detail:'CVF reducida con cociente conservado. La restricción requiere confirmación mediante TLC.',tone:'yellow'};
+  return {title:'Espirometría dentro de límites esperados',detail:'VEF₁/CVF y CVF se encuentran sobre sus límites inferiores de normalidad.',tone:'green'};
+}
+
+const $=(s)=>document.querySelector(s), clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const state={age:45,height:172,sex:'M',population:'adult',system:'gli2022',group:'Global',fvc:4.35,fev1:3.35,pef:9.1,fef25:7.0,fef50:4.6,fef75:1.7,pif:6.2,mode:'linked',tab:'analysis',quality:{cough:false,leak:false,early:false,bev:.08,repro:.10,maneuvers:3}};
+const presets={normal:{fvc:4.35,fev1:3.35,pef:9.1,fef25:7,fef50:4.6,fef75:1.7},mild:{fvc:4.1,fev1:2.55,pef:7.2,fef25:4.5,fef50:2.3,fef75:.7},severe:{fvc:3.45,fev1:1.25,pef:4.4,fef25:2.6,fef50:1.1,fef75:.3},restrictive:{fvc:2.55,fev1:2.15,pef:7.4,fef25:6.0,fef50:4.0,fef75:1.5},mixed:{fvc:2.5,fev1:1.3,pef:4.8,fef25:2.7,fef50:1.25,fef75:.35},prism:{fvc:3.4,fev1:2.35,pef:7.0,fef25:5.3,fef50:3.3,fef75:1.1}};
+function field(id,label,min,max,step,unit){return `<div class="field"><label>${label}<b id="${id}Out">${state[id].toFixed(step<1?2:0)} ${unit}</b></label><input id="${id}" type="range" min="${min}" max="${max}" step="${step}" value="${state[id]}"></div>`}
+function render(){
+ const groupOptions=systems[state.system].groups.map(g=>`<option ${g===state.group?'selected':''}>${g}</option>`).join('');
+ $('#app').innerHTML=`<div class="shell"><header class="topbar"><div class="brand"><div class="logo">SL</div><div><h1>SpiroLab AI-UCH</h1><small>Motor fisiológico de simulación espirométrica</small></div></div><div class="top-actions"><button class="btn" id="share">Compartir</button><button class="btn" id="print">Informe</button><button class="btn primary" id="fullscreen">Pantalla completa</button></div></header><div class="workspace">
+ <aside class="panel sidebar"><div class="section-title">Paciente virtual</div><div class="two"><div class="field"><label>Edad</label><input id="age" type="number" value="${state.age}"></div><div class="field"><label>Talla (cm)</label><input id="height" type="number" value="${state.height}"></div></div><div class="two"><div class="field"><label>Sexo</label><select id="sex"><option value="M" ${state.sex==='M'?'selected':''}>Masculino</option><option value="F" ${state.sex==='F'?'selected':''}>Femenino</option></select></div><div class="field"><label>Población</label><select id="population"><option value="adult">Adulto</option><option value="pediatric">Pediátrico</option></select></div></div><div class="field"><label>Ecuación de referencia</label><select id="system">${Object.entries(systems).map(([k,v])=>`<option value="${k}" ${k===state.system?'selected':''}>${v.label}</option>`).join('')}</select></div><div class="field"><label>Grupo de referencia</label><select id="group">${groupOptions}</select></div>
+ <div class="section-title">Patrones rápidos</div><div class="preset-grid">${Object.entries({normal:'Normal',mild:'Obstructivo leve',severe:'Obstructivo severo',restrictive:'Restrictivo probable',mixed:'Mixto probable',prism:'PRISm'}).map(([k,v])=>`<button class="preset" data-preset="${k}">${v}</button>`).join('')}</div>
+ <div class="section-title">Variables primarias</div>${field('fvc','CVF',.5,8,.01,'L')}${field('fev1','VEF₁',.3,7,.01,'L')}${field('pef','PEF',1,14,.05,'L/s')}${field('pif','PIF',1,12,.05,'L/s')}
+ <div class="section-title">Motor de curva</div><div class="switchline"><span style="font-size:12px">Edición avanzada de FEF</span><button class="switch ${state.mode==='advanced'?'on':''}" id="mode"></button></div><div id="fefControls">${field('fef25','FEF₂₅',.2,12,.05,'L/s')}${field('fef50','FEF₅₀',.1,10,.05,'L/s')}${field('fef75','FEF₇₅',.05,6,.05,'L/s')}</div></aside>
+ <main class="main"><section class="panel hero"><div><h2>Simulador fisiológico</h2><p>CVF, VEF₁ y PEF como restricciones duras; flujos instantáneos como restricciones blandas.</p></div><div class="status" id="solverStatus">Solver convergente</div></section><section class="charts"><div class="panel chart-card"><div class="chart-head"><strong>Curva flujo–volumen</strong><span>Flujo (L/s) · Volumen (L)</span></div><svg id="fv"></svg></div><div class="panel chart-card"><div class="chart-head"><strong>Curva volumen–tiempo</strong><span>Volumen (L) · Tiempo (s)</span></div><svg id="vt"></svg></div></section><section class="metrics" id="metrics"></section><section class="panel"><div class="tabs">${['analysis','quality','broncho','teacher','developer'].map(t=>`<button class="tab ${state.tab===t?'active':''}" data-tab="${t}">${({analysis:'Análisis',quality:'Calidad',broncho:'Broncodilatador',teacher:'Modo docente',developer:'Desarrollador'})[t]}</button>`).join('')}</div><div class="content-panel" id="tabContent"></div></section></main>
+ <aside class="rightbar"><section class="panel interpretation" id="interpretation"></section><section class="panel solver" id="solverPanel"></section><section class="panel interpretation"><div class="section-title">Valores de referencia</div><table class="table" id="refTable"></table></section></aside></div><footer class="footer">Uso educativo y de investigación. No sustituye software clínico validado ni la interpretación profesional.</footer></div>`;
+ bind();update();
+}
+function bind(){
+ ['age','height','sex','population','system','group'].forEach(id=>$('#'+id)?.addEventListener('change',e=>{state[id]=['age','height'].includes(id)?+e.target.value:e.target.value;if(id==='system'){state.group=systems[state.system].groups[0];render()}else update()}));
+ ['fvc','fev1','pef','pif','fef25','fef50','fef75'].forEach(id=>$('#'+id)?.addEventListener('input',e=>{state[id]=+e.target.value;update()}));
+ document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{Object.assign(state,presets[b.dataset.preset]);render()});
+ document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{state.tab=b.dataset.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));updateTab()});
+ $('#mode').onclick=()=>{state.mode=state.mode==='linked'?'advanced':'linked';render()};
+ $('#fullscreen').onclick=()=>document.documentElement.requestFullscreen?.(); $('#print').onclick=()=>print(); $('#share').onclick=async()=>{try{await navigator.share({title:'SpiroLab AI-UCH',url:location.href})}catch{await navigator.clipboard.writeText(location.href);alert('Enlace copiado')}};
+}
+function linkedTargets(){if(state.mode!=='linked')return;const r=clamp(state.fev1/state.fvc,.22,.9),severity=clamp((.82-r)/.5,0,1);state.fef25=state.pef*(.72-.16*severity);state.fef50=state.pef*(.50-.28*severity);state.fef75=state.pef*(.20-.14*severity)}
+function update(){linkedTargets();['fvc','fev1','pef','pif','fef25','fef50','fef75'].forEach(id=>{const o=$('#'+id+'Out');if(o)o.textContent=`${state[id].toFixed(2)} ${id.includes('fef')||id==='pef'||id==='pif'?'L/s':'L'}`;const el=$('#'+id);if(el&&state.mode==='linked'&&id.startsWith('fef')){el.value=state[id];el.disabled=true}});
+ const pred=predict(state);const input={...state};const sol=solveCurve(input);const m={fvc:state.fvc,fev1:state.fev1,ratio:state.fev1/state.fvc,pef:state.pef};const it=interpret(m,pred);drawFV(sol);drawVT(sol);renderMetrics(m,pred,sol);renderInterpretation(it,m,pred);renderSolver(sol);renderRefs(m,pred);updateTab(sol,pred,m);
+}
+function axes(svg,xMax,yMin,yMax,xLabel,yLabel){const W=700,H=315,p={l:48,r:18,t:18,b:34};svg.setAttribute('viewBox',`0 0 ${W} ${H}`);let h='';for(let i=0;i<=5;i++){const x=p.l+(W-p.l-p.r)*i/5;h+=`<line class="grid-line" x1="${x}" y1="${p.t}" x2="${x}" y2="${H-p.b}"/><text class="axis-label" x="${x}" y="${H-13}" text-anchor="middle">${(xMax*i/5).toFixed(1)}</text>`}for(let i=0;i<=6;i++){const y=p.t+(H-p.t-p.b)*i/6,val=yMax-(yMax-yMin)*i/6;h+=`<line class="grid-line" x1="${p.l}" y1="${y}" x2="${W-p.r}" y2="${y}"/><text class="axis-label" x="${p.l-8}" y="${y+3}" text-anchor="end">${val.toFixed(1)}</text>`}h+=`<line class="axis" x1="${p.l}" y1="${H-p.b}" x2="${W-p.r}" y2="${H-p.b}"/><line class="axis" x1="${p.l}" y1="${p.t}" x2="${p.l}" y2="${H-p.b}"/>`;return {W,H,p,h,X:v=>p.l+v/xMax*(W-p.l-p.r),Y:v=>p.t+(yMax-v)/(yMax-yMin)*(H-p.t-p.b)}}
+function path(points,X,Y){return points.map((d,i)=>`${i?'L':'M'}${X(d.x).toFixed(2)},${Y(d.y).toFixed(2)}`).join(' ')}
+function drawFV(sol){const svg=$('#fv'),ymax=Math.max(12,state.pef*1.2),a=axes(svg,state.fvc*1.12,-Math.max(8,state.pif*1.25),ymax);const exp=sol.exp.map(d=>({x:d.v,y:d.q})),insp=sol.insp.map(d=>({x:d.v,y:d.q}));svg.innerHTML=a.h+`<path class="curve" d="${path(exp,a.X,a.Y)}"/><path class="curve-secondary" d="${path(insp,a.X,a.Y)}"/>`+[[.25,state.fef25],[.5,state.fef50],[.75,state.fef75]].map(([x,y])=>`<circle class="point" cx="${a.X(state.fvc*x)}" cy="${a.Y(y)}" r="4"/>`).join('')}
+function drawVT(sol){const svg=$('#vt'),tmax=Math.min(16,Math.max(6,sol.fet*1.08)),a=axes(svg,tmax,0,state.fvc*1.15);const pts=sol.timeline.filter((_,i)=>i%4===0).map(d=>({x:Math.min(d.t,tmax),y:d.v}));svg.innerHTML=a.h+`<path class="curve" d="${path(pts,a.X,a.Y)}"/><line x1="${a.X(1)}" y1="${a.Y(0)}" x2="${a.X(1)}" y2="${a.Y(state.fev1)}" stroke="#ffcc66" stroke-dasharray="5 5"/><circle class="point" cx="${a.X(1)}" cy="${a.Y(sol.generatedFEV1)}" r="4"/>`}
+function renderMetrics(m,p,s){const data=[['CVF',m.fvc,'L',z(m.fvc,p.fvc,p.sd.fvc)],['VEF₁',m.fev1,'L',z(m.fev1,p.fev1,p.sd.fev1)],['VEF₁/CVF',m.ratio*100,'%',z(m.ratio,p.ratio,p.sd.ratio)],['PEF',m.pef,'L/s',z(m.pef,p.pef,p.sd.pef)],['FEF₂₅–₇₅',(s.generatedFEFs.fef25+s.generatedFEFs.fef50+s.generatedFEFs.fef75)/3,'L/s',null],['FET',s.fet,'s',null]];$('#metrics').innerHTML=data.map(([n,v,u,zz])=>`<div class="panel metric"><div class="name">${n}</div><div class="value">${v.toFixed(n==='VEF₁/CVF'?1:2)} <small>${u}</small></div><div class="sub">${zz==null?'Generado por el modelo':`z-score ${zz.toFixed(2)}`}</div></div>`).join('')}
+function renderInterpretation(it,m,p){$('#interpretation').innerHTML=`<span class="result-badge">Interpretación automática</span><h3>${it.title}</h3><p>${it.detail}</p><div class="notice">Cociente medido: ${(m.ratio*100).toFixed(1)}% · LLN: ${(p.lln.ratio*100).toFixed(1)}%. CVF: ${m.fvc.toFixed(2)} L · LLN: ${p.lln.fvc.toFixed(2)} L.</div>`}
+function renderSolver(s){$('#solverPanel').innerHTML=`<div class="section-title">Estado del solver</div><div class="solver-row"><span>Coherencia interna</span><b>${s.coherence.toFixed(1)}%</b></div><div class="bar"><i style="width:${s.coherence}%"></i></div><div class="solver-row"><span>VEF₁ objetivo</span><b>${state.fev1.toFixed(3)} L</b></div><div class="solver-row"><span>VEF₁ generado</span><b>${s.generatedFEV1.toFixed(3)} L</b></div><div class="solver-row"><span>Error absoluto</span><b>${Math.abs(s.generatedFEV1-state.fev1).toFixed(3)} L</b></div><div class="solver-row"><span>Iteraciones</span><b>${s.iterations}</b></div>`;$('#solverStatus').textContent=s.coherence>95?'Solver convergente':'Revisar coherencia de entradas'}
+function renderRefs(m,p){$('#refTable').innerHTML=`<tr><th>Variable</th><th>Medido</th><th>Pred.</th><th>LLN</th><th>%Pred.</th></tr>${[['CVF',m.fvc,p.fvc,p.lln.fvc],['VEF₁',m.fev1,p.fev1,p.lln.fev1],['VEF₁/CVF',m.ratio,p.ratio,p.lln.ratio],['PEF',m.pef,p.pef,p.lln.pef]].map(([n,a,b,c])=>`<tr><td>${n}</td><td>${n==='VEF₁/CVF'?(a*100).toFixed(1)+'%':a.toFixed(2)}</td><td>${n==='VEF₁/CVF'?(b*100).toFixed(1)+'%':b.toFixed(2)}</td><td>${n==='VEF₁/CVF'?(c*100).toFixed(1)+'%':c.toFixed(2)}</td><td>${(a/b*100).toFixed(0)}%</td></tr>`).join('')}`}
+function updateTab(sol,p,m){const el=$('#tabContent');if(!el)return;if(state.tab==='analysis')el.innerHTML=`<div class="advanced-grid"><div class="case-card"><strong>Restricciones duras</strong><span>CVF ${state.fvc.toFixed(2)} L · VEF₁ ${state.fev1.toFixed(2)} L · PEF ${state.pef.toFixed(2)} L/s</span></div><div class="case-card"><strong>Restricciones blandas</strong><span>FEF₂₅ ${state.fef25.toFixed(2)} · FEF₅₀ ${state.fef50.toFixed(2)} · FEF₇₅ ${state.fef75.toFixed(2)} L/s</span></div></div><p class="notice">La concavidad emerge de la solución conjunta. En modo vinculado, los FEF se recalculan al modificar VEF₁, CVF o PEF. En edición avanzada se conservan como objetivos blandos y el software muestra la coherencia alcanzada.</p>`;
+ else if(state.tab==='quality')el.innerHTML=`<div class="advanced-grid">${['Inicio satisfactorio','Sin tos en primer segundo','Sin fuga','Final espiratorio adecuado','Repetibilidad ≤150 mL','≥3 maniobras aceptables'].map((x,i)=>`<div class="case-card"><strong>${i<4?'✓':'●'} ${x}</strong><span>${i<4?'Criterio simulado como aceptable':'Configurable en una próxima iteración del módulo'}</span></div>`).join('')}</div>`;
+ else if(state.tab==='broncho')el.innerHTML=`<div class="case-card"><strong>Simulación broncodilatadora</strong><span>Seleccione un cambio de VEF₁ y CVF para comparar curvas pre/post. El módulo usará los mismos controles de coherencia del solver.</span></div>`;
+ else if(state.tab==='teacher')el.innerHTML=`<div class="advanced-grid"><div class="case-card"><strong>Crear caso oculto</strong><span>Guarda la configuración actual sin mostrar interpretación.</span></div><div class="case-card"><strong>Revelar respuesta</strong><span>Presenta patrón, variables críticas y razonamiento interpretativo.</span></div></div>`;
+ else el.innerHTML=`<table class="table"><tr><th>Parámetro interno</th><th>Valor</th></tr><tr><td>a (decaimiento)</td><td>${sol.params[0].toFixed(4)}</td></tr><tr><td>b (forma media)</td><td>${sol.params[1].toFixed(4)}</td></tr><tr><td>c (forma terminal)</td><td>${sol.params[2].toFixed(4)}</td></tr><tr><td>Función objetivo</td><td>${sol.loss.toFixed(6)}</td></tr><tr><td>FET modelado</td><td>${sol.fet.toFixed(3)} s</td></tr></table>`}
+render();
+</script>
+</body>
+</html>

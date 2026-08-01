@@ -1,0 +1,5 @@
+[
+  {"id":"normal-adult","label":"Adulto normal","age":45,"height":172,"sex":"M","fvc":4.35,"fev1":3.35,"pef":9.1,"fef25":7.0,"fef50":4.6,"fef75":1.7},
+  {"id":"obstructive-severe","label":"Obstrucción severa","age":68,"height":170,"sex":"M","fvc":3.45,"fev1":1.25,"pef":4.4,"fef25":2.6,"fef50":1.1,"fef75":0.3},
+  {"id":"probable-mixed","label":"Mixto probable","age":63,"height":165,"sex":"F","fvc":2.50,"fev1":1.30,"pef":4.8,"fef25":2.7,"fef50":1.25,"fef75":0.35}
+]

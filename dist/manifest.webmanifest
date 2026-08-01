@@ -1,0 +1,9 @@
+{
+  "name": "SpiroLab AI-UCH",
+  "short_name": "SpiroLab",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#061525",
+  "theme_color": "#061525",
+  "description": "Simulador docente avanzado de espirometría."
+}

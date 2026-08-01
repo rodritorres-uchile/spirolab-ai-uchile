@@ -1,0 +1,13 @@
+{
+  "name": "spirolab-ai-uch-platform",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": ["spirolab-core", "spirolab-ui"],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test spirolab-core/tests/*.test.js tests/*.test.js",
+    "dev": "python3 -m http.server 8080 -d dist"
+  },
+  "license": "MIT"
+}

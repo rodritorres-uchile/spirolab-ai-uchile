@@ -1,0 +1,4 @@
+id,system,group,age,sex,height_cm,fvc_measured,fev1_measured,status
+001,gli2022,Global,45,M,172,4.35,3.35,pending_official_validation
+002,gli2012,Caucásico,12,F,150,2.80,2.45,pending_official_validation
+003,gutierrez,Población chilena,60,M,168,3.40,2.45,pending_official_validation

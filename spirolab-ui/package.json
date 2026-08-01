@@ -1,0 +1,7 @@
+{
+  "name": "@spirolab/ui",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Interfaz web profesional de SpiroLab AI-UCH"
+}
