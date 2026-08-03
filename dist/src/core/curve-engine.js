@@ -65,49 +65,76 @@ function morphology({ disease, severity, resistance, smallAirways, elasticRecoil
   };
 }
 
-function expiratoryFlowAtFraction(x, pef, model) {
-  if (x <= 0 || x >= 1) return 0;
+function buildSmoothExpiratorySpline(pef, model) {
+  // Puntos morfológicos de una única spline C1. La curva ya no cambia de
+  // función por regiones, por lo que desaparecen codos y muescas.
+  const peakX = 0.055;
+  const obstruction = clamp(model.obstructionDrive + 0.45 * model.ratioDeficit, 0, 1.45);
 
-  // REGIÓN 1: ascenso explosivo. PEF precoz y pronunciado.
-  const peakX = 0.050;
-  if (x <= peakX) return pef * smoothstep(x / peakX);
+  const shoulder = pef * clamp(0.94 - 0.24 * model.postPeakDrop - 0.08 * obstruction, 0.55, 0.96);
+  const f25 = pef * clamp(0.72 - 0.38 * model.middleDepression - 0.10 * obstruction, 0.18, 0.78);
+  const f50 = pef * clamp(0.48 - 0.50 * model.middleDepression - 0.18 * obstruction, 0.035, 0.58);
+  const f75 = pef * clamp(0.24 - 0.42 * model.terminalCompression - 0.14 * obstruction, 0.008, 0.34);
+  const f90 = pef * clamp(0.075 - 0.10 * model.terminalCompression - 0.045 * obstruction, 0.002, 0.10);
 
-  const u = clamp((x - peakX) / (1 - peakX), 0, 1);
+  const xs = [0, peakX, 0.12, 0.25, 0.50, 0.75, 0.90, 1.0];
+  const ys = [0, pef, shoulder, f25, f50, f75, f90, 0];
 
-  // REGIÓN 2: hombro redondeado y caída pos-PEF (5–18% de la rama descendente).
-  const shoulderEnd = 0.13;
-  if (u <= shoulderEnd) {
-    const t = u / shoulderEnd;
-    const shoulderEndFlow = pef * (1 - model.postPeakDrop);
-    return pef + (shoulderEndFlow - pef) * smoothstep(t);
+  // Fritsch-Carlson / PCHIP: interpolación cúbica monotónica con continuidad
+  // de primera derivada. Conserva el PEF y evita sobreoscilaciones.
+  const n = xs.length;
+  const h = new Array(n - 1);
+  const delta = new Array(n - 1);
+  for (let i = 0; i < n - 1; i += 1) {
+    h[i] = xs[i + 1] - xs[i];
+    delta[i] = (ys[i + 1] - ys[i]) / h[i];
   }
+  const m = new Array(n).fill(0);
+  m[0] = delta[0];
+  m[n - 1] = delta[n - 2];
+  for (let i = 1; i < n - 1; i += 1) {
+    if (delta[i - 1] === 0 || delta[i] === 0 || Math.sign(delta[i - 1]) !== Math.sign(delta[i])) {
+      m[i] = 0;
+    } else {
+      const w1 = 2 * h[i] + h[i - 1];
+      const w2 = h[i] + 2 * h[i - 1];
+      m[i] = (w1 + w2) / (w1 / delta[i - 1] + w2 / delta[i]);
+    }
+  }
+  // El PEF debe ser redondeado: pendiente nula exactamente en el máximo.
+  m[1] = 0;
 
-  // REGIONES 3–4 normalizadas después del hombro.
-  const z = clamp((u - shoulderEnd) / (1 - shoulderEnd), 0, 1);
-  const remaining = Math.max(0, 1 - z);
+  return (x) => {
+    if (x <= 0 || x >= 1) return 0;
+    let i = n - 2;
+    for (let j = 0; j < n - 1; j += 1) {
+      if (x >= xs[j] && x <= xs[j + 1]) { i = j; break; }
+    }
+    const t = (x - xs[i]) / h[i];
+    const t2 = t * t;
+    const t3 = t2 * t;
+    const h00 = 2 * t3 - 3 * t2 + 1;
+    const h10 = t3 - 2 * t2 + t;
+    const h01 = -2 * t3 + 3 * t2;
+    const h11 = t3 - t2;
+    const y = h00 * ys[i] + h10 * h[i] * m[i] + h01 * ys[i + 1] + h11 * h[i] * m[i + 1];
+    return Math.max(0, Math.min(pef, y));
+  };
+}
 
-  // REGIÓN 3: caída base por potencia. Exponente >1 = excavación superior.
-  let flow = pef * (1 - model.postPeakDrop) * Math.pow(remaining, model.exponent);
-
-  // Excavación localizada en la zona media, 30–78% de la CVF.
-  const bowl = Math.exp(-Math.pow((z - 0.50) / 0.25, 2));
-  flow *= 1 - model.middleDepression * bowl;
-
-  // REGIÓN 4: compresión terminal progresiva, sin crear quiebre al final.
-  const terminalGate = smoothstep(clamp((z - 0.58) / 0.42, 0, 1));
-  flow *= 1 - model.terminalCompression * terminalGate;
-
-  return Math.max(0, Math.min(pef, flow));
+function expiratoryFlowAtFraction(x, pef, model) {
+  return buildSmoothExpiratorySpline(pef, model)(x);
 }
 
 export function generateFlowVolume({ fvc, fev1, fivc, pef, disease, severity, resistance, smallAirways, elasticRecoil, scoop, predictedRatio = 0.80, points = 220 }) {
   const model = morphology({ disease, severity, resistance, smallAirways, elasticRecoil, scoop, fev1, fvc, predictedRatio });
 
+  const baseSpline = buildSmoothExpiratorySpline(pef, model);
   const buildExpiration = (earlyScale = 1) => {
     const expiration = [];
     for (let i = 0; i <= points; i += 1) {
       const fraction = i / points;
-      let flow = expiratoryFlowAtFraction(fraction, pef, model);
+      let flow = baseSpline(fraction);
 
       // El solver actúa únicamente en la descarga temprana (hasta ~30% CVF).
       // La excavación media y la cola terminal permanecen bloqueadas.

@@ -1,16 +1,13 @@
-# SpiroLab AI-UCH v1.0 alpha4
+# SpiroLab AI-UCH v1.0 alpha5
 
-Versión completa para GitHub Pages con dos correcciones principales:
+Versión completa para GitHub Pages.
 
-1. **CVIF correctamente orientada**: la rama inspiratoria comienza en el final de la espiración (CVF, extremo derecho) y avanza hacia la izquierda.
-2. **CurveEngine por cuatro regiones restaurado**: ascenso al PEF, caída pos-PEF, zona media excavada y cola terminal. La excavación aumenta automáticamente al disminuir VEF1/CVF y el solver no puede enderezar la zona media/terminal.
+## Cambios principales
+- CurveEngine 3.0 con una única spline cúbica monotónica C1.
+- PEF redondeado, sin codos ni muescas.
+- Excavación obstructiva dependiente de VEF1/CVF y del perfil fisiopatológico.
+- CVIF desde el final espiratorio (derecha) hacia la izquierda.
+- Proyecto completo con fuente, pruebas, documentación y `dist`.
 
 ## Publicación
-
-Copiar todo el contenido de esta carpeta a la raíz del repositorio, hacer commit y push. GitHub Pages debe apuntar a `main` y `/(root)`.
-
-## Validación incluida
-
-`npm test` ejecuta comprobaciones de dirección de CVIF, límite de PEF y excavación dependiente del VEF1.
-
-> Herramienta educativa en desarrollo. No usar para decisiones clínicas.
+Sube todo el contenido a la raíz del repositorio y conserva GitHub Pages en `main / (root)`.
