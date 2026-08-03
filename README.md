@@ -1,24 +1,15 @@
-# SpiroLab AI-UCH v0.1
+# SpiroLab AI-UCH v0.2.0
 
-Primera base funcional del software profesional de simulación de espirometría.
+Sprint 1: motor de curvas de segunda generación.
 
-## Publicación inmediata
-El archivo `index.html` de la raíz es autocontenido. Para GitHub Pages use:
+## Cambios
+- Interpolación cúbica monotónica para las ramas espiratoria y volumen-tiempo.
+- Inspiración suavizada con curva cúbica.
+- Eliminación visual de puntos de control por defecto.
+- Opción para mostrar puntos de control.
+- Panel de métricas rápidas: VEF1/CVF, FET, error del solver y coherencia.
+- Motor vinculado con CVF, VEF1 y PEF como restricciones prioritarias.
+- Interfaz refinada y leyenda de curvas.
 
-- Source: Deploy from a branch
-- Branch: main
-- Folder: /(root)
-
-## Desarrollo
-- `src/core/engine.js`: predicción educativa, solver, curvas e interpretación.
-- `src/ui/app.js`: estado e interfaz.
-- `src/ui/styles.css`: sistema visual.
-- `scripts-build.mjs`: genera el `index.html` autocontenido.
-- `tests/`: pruebas automáticas.
-
-```bash
-npm test
-npm run build
-```
-
-> Las ecuaciones predictivas incluidas son demostrativas y no están validadas para uso clínico.
+## Publicación
+Copie `index.html` y `README.md` a la raíz del repositorio y haga commit/push.
