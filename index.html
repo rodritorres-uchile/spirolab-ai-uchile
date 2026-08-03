@@ -2,7 +2,7 @@
 .phys-card{padding:10px;border:1px solid #203d56;background:#081725;border-radius:11px;margin-bottom:9px}.phys-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}.phys-name{font-weight:700;color:#dce9f4}.phys-unit{display:block;color:#7895ad;font-size:10px;margin-top:2px}.phys-status{font-size:10px;font-weight:800;padding:3px 7px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}.phys-status.good{color:#67ddb1;background:#12362f}.phys-status.caution{color:#f0d267;background:#443a16}.phys-status.warning{color:#ffad62;background:#4b2917}.phys-status.danger{color:#ff7b7b;background:#4b1d27}.colored-range{width:100%;height:9px!important;border-radius:999px;appearance:none;background:linear-gradient(90deg,#ef6b74 0 12%,#edaa54 12% 25%,#e8cf58 25% 38%,#55c98e 38% 65%,#e8cf58 65% 78%,#edaa54 78% 90%,#ef6b74 90% 100%);outline:none}.colored-range::-webkit-slider-thumb{appearance:none;width:17px;height:17px;border-radius:50%;background:#f7fbff;border:3px solid #173d55;box-shadow:0 0 0 2px #c8e7f0}.colored-range.one-way{background:linear-gradient(90deg,#55c98e 0 25%,#e8cf58 25% 45%,#edaa54 45% 70%,#ef6b74 70% 100%)}.phys-value-line{display:flex;justify-content:space-between;align-items:center;color:#91a8bd;font-size:10px;margin-top:5px}.phys-value-line b{color:#e5f2fb;font-size:12px}.primary-btn{width:100%;border:1px solid #319486;background:linear-gradient(180deg,#21766e,#15524f);color:white;border-radius:9px;padding:9px 11px;font-weight:750;cursor:pointer;margin-top:8px}.primary-btn:hover{filter:brightness(1.12)}.disease-note{padding:9px 10px;border-radius:9px;background:#10283b;border:1px solid #24465f;color:#a9c0d2;font-size:11px;margin-top:8px}.phys-help{font-size:10px;color:#8ba4b9;margin-top:8px;line-height:1.35}
 @media(max-width:1200px){.dashboard{grid-template-columns:280px 1fr}.right{grid-column:1/-1}.nav{overflow:auto}}@media(max-width:780px){.topbar{height:auto;padding:10px;flex-wrap:wrap}.brand{min-width:0}.nav{order:3;width:100%}.dashboard{grid-template-columns:1fr}.workspace{padding:8px}.cards{grid-template-columns:1fr}.actions{margin-left:auto}}@media print{.topbar,.left{display:none}.dashboard{display:block}.panel{box-shadow:none;margin-bottom:12px}.right{display:block}body{background:white;color:black}.panel{background:white;color:black}.chart-bg{fill:white}.tick,.label{fill:#333}}
 </style></head><body>
-<div class="app"><header class="topbar"><div class="brand"><div class="logo">SL</div><div><b>SpiroLab AI-UCH</b><small>Motor educativo de espirometría · v0.5.0</small></div></div><nav class="nav"><button class="nav-btn active" data-module="simulator">Simulador</button><button class="nav-btn" data-module="quality">Calidad</button><button class="nav-btn" data-module="broncho">Broncodilatador</button><button class="nav-btn" data-module="teaching">Docencia</button><button class="nav-btn" data-module="about">Acerca de</button></nav><div class="actions"><button id="share" class="ghost">Compartir</button><button id="print" class="ghost">Informe</button><button id="fullscreen" class="ghost">Pantalla completa</button></div></header>
+<div class="app"><header class="topbar"><div class="brand"><div class="logo">SL</div><div><b>SpiroLab AI-UCH</b><small>Motor educativo de espirometría · v0.5.1</small></div></div><nav class="nav"><button class="nav-btn active" data-module="simulator">Simulador</button><button class="nav-btn" data-module="quality">Calidad</button><button class="nav-btn" data-module="broncho">Broncodilatador</button><button class="nav-btn" data-module="teaching">Docencia</button><button class="nav-btn" data-module="about">Acerca de</button></nav><div class="actions"><button id="share" class="ghost">Compartir</button><button id="print" class="ghost">Informe</button><button id="fullscreen" class="ghost">Pantalla completa</button></div></header>
 <main class="workspace"><section id="simulator" class="module"><div class="dashboard">
 <aside class="panel left"><div class="panel-head"><h3>Generador</h3><span id="solverStatus" class="status">—</span></div><div class="panel-body">
 <div class="section"><div class="section-title">Paciente virtual</div><label class="field"><span>Población</span><select id="population"><option value="adult">Adulto</option><option value="pediatric">Pediátrico</option></select></label><label class="field"><span>Sexo</span><select id="sex"><option value="M">Masculino</option><option value="F">Femenino</option></select></label><label class="field"><span>Edad</span><input id="age" type="number" min="3" max="95" value="45"></label><label class="field"><span>Estatura (cm)</span><input id="height" type="number" min="90" max="210" value="172"></label></div>
@@ -57,14 +57,37 @@ function smoothstep(t){return t*t*(3-2*t)}
 function baseFlow(x,pef,alpha,xPeak=.045,phys={}){
   if(x<=0)return 0;
   if(x<xPeak)return pef*smoothstep(x/xPeak);
+
   const q=(1-x)/(1-xPeak);
   const resistance=(phys.airwayResistance??35)/100;
   const small=(phys.smallAirways??25)/100;
   const recoil=(phys.elasticRecoil??55)/100;
-  const earlyBoost=1+(recoil-.5)*.18*Math.exp(-3*x);
-  const resistanceLoss=1-(resistance-.35)*.22*Math.pow(x,.75);
-  const lateLoss=1-small*.42*Math.pow(x,2.2);
-  return Math.max(0,pef*Math.pow(Math.max(0,q),alpha)*(1-0.08*x)*earlyBoost*resistanceLoss*lateLoss);
+
+  // Efectos globales: el retroceso favorece el flujo inicial, mientras que
+  // la resistencia y la vía aérea pequeña deprimen progresivamente los flujos.
+  const earlyBoost=1+(recoil-.55)*.20*Math.exp(-3.4*x);
+  const resistanceLoss=1-clamp((resistance-.25)*.28,0,.24)*Math.pow(x,.72);
+  const lateLoss=1-clamp(small-.12,0,.88)*.48*Math.pow(x,2.05);
+
+  // Excavación obstructiva. La deformación es nula cerca del PEF y al llegar
+  // a la CVF, y alcanza su máximo entre el 45 y el 75% del volumen espirado.
+  // Surge de tres componentes: resistencia, compromiso periférico y pérdida
+  // de retroceso elástico. No es un parámetro independiente de la interfaz.
+  const obstructionDrive=clamp(
+    .52*Math.max(0,resistance-.30)+
+    .78*Math.max(0,small-.20)+
+    .88*Math.max(0,.55-recoil),
+    0,.92
+  );
+  const u=clamp((x-xPeak)/(1-xPeak),0,1);
+  const rawScoop=Math.pow(u,1.25)*Math.pow(1-u,.62);
+  const scoopNorm=rawScoop/.356; // normaliza aproximadamente el máximo a 1
+  const scoopFactor=1-obstructionDrive*.68*clamp(scoopNorm,0,1);
+
+  return Math.max(0,
+    pef*Math.pow(Math.max(0,q),alpha)*(1-0.065*x)*
+    earlyBoost*resistanceLoss*lateLoss*scoopFactor
+  );
 }
 
 function integrateCurve(flowFn,fvc,steps=1000){
