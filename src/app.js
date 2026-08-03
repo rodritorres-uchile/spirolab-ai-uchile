@@ -13,7 +13,7 @@ const $ = id => document.getElementById(id);
 function updateGroups(){ const ref=REFERENCE_CATALOG[state.reference]; $('group').innerHTML=ref.groups.map(g=>`<option>${g}</option>`).join(''); state.group=ref.groups[0]; }
 function syncControls(){ for(const id of ['fvc','fev1','pef','fivc','resistance','smallAirways','elasticRecoil']){ $(id).value=state[id]; $(`${id}Out`).textContent=id==='resistance'||id==='smallAirways'||id==='elasticRecoil'?`${state[id]}/100`:state[id].toFixed(id==='pef'?1:2); } }
 function render(){
-  const predicted=predictReference(state); const curve=generateFlowVolume({ ...state, points:220 }); const time=integrateVolumeTime(curve.expiration);
+  const predicted=predictReference(state); const curve=generateFlowVolume({ ...state, predictedRatio: predicted.ratio, points:220 }); const time=integrateVolumeTime(curve.expiration);
   const generatedFev1=interpolateVolumeAtTime(time,1); const flows=flowsAtFractions(curve.expiration,state.fvc);
   const measured={...state,ratio:state.fev1/state.fvc}; const interpretation=interpret({measured,predicted}); const quality=evaluateFivc(state);
   drawFlowChart($('flowChart'),curve,predicted,{showPredicted:state.showPredicted,showPoints:state.showPoints}); drawTimeChart($('timeChart'),time,state.fvc);

@@ -8,8 +8,8 @@ const pred = predictReference({ age: 45, height: 172, sex: 'M', reference: 'gli2
 assert(pred.fvc > 4 && pred.fev1 > 3);
 const emph = applyPathology(pred, 'emphysema', 4);
 const normal = applyPathology(pred, 'normal', 0);
-const normalCurve = generateFlowVolume({ ...normal, fivc: normal.fvc, disease: 'normal', severity: 0, points: 220 });
-const emphCurve = generateFlowVolume({ ...emph, fivc: emph.fvc, disease: 'emphysema', severity: 4, points: 220 });
+const normalCurve = generateFlowVolume({ ...normal, fivc: normal.fvc, disease: 'normal', severity: 0, predictedRatio: pred.ratio, points: 220 });
+const emphCurve = generateFlowVolume({ ...emph, fivc: emph.fvc, disease: 'emphysema', severity: 4, predictedRatio: pred.ratio, points: 220 });
 const flowAt = (curve, fraction) => curve.expiration.reduce((best,p)=>Math.abs(p.volume-fraction*curve.expiration.at(-1).volume)<Math.abs(best.volume-fraction*curve.expiration.at(-1).volume)?p:best).flow;
 assert(flowAt(emphCurve,0.5) < flowAt(normalCurve,0.5)*0.35, 'El enfisema debe excavar el flujo medio');
 assert(Math.max(...emphCurve.expiration.map(p=>p.flow)) <= emph.pef + 1e-6, 'La curva no debe sobrepasar PEF');
@@ -18,8 +18,11 @@ assert(interpolateVolumeAtTime(time,1) > 0);
 assert(evaluateFivc({fvc:4,fivc:4.1}).acceptable);
 assert(Math.abs(normalCurve.inspiration[0].volume - normal.fvc) < 1e-9, 'La inspiración debe comenzar al final de la espiración (CVF)');
 assert(Math.abs(normalCurve.inspiration.at(-1).volume - (normal.fvc - normal.fvc)) < 1e-9, 'Con CVIF=CVF la inspiración debe terminar en 0 L');
-const unequalFivc = generateFlowVolume({ ...normal, fivc: normal.fvc + 0.12, disease: 'normal', severity: 0, points: 220 });
+const unequalFivc = generateFlowVolume({ ...normal, fivc: normal.fvc + 0.12, disease: 'normal', severity: 0, predictedRatio: pred.ratio, points: 220 });
 assert(Math.abs(unequalFivc.inspiration[0].volume - normal.fvc) < 1e-9, 'La CVIF siempre debe partir desde el extremo derecho de la CVF');
 assert(unequalFivc.inspiration.at(-1).volume < 0, 'Si CVIF>CVF el extremo inspiratorio debe quedar a la izquierda del origen');
 
-console.log('✓ 10 comprobaciones aprobadas');
+const lowerFev1Curve = generateFlowVolume({ ...emph, fev1: emph.fev1 * 0.72, fivc: emph.fvc, disease: 'emphysema', severity: 4, predictedRatio: pred.ratio, points: 220 });
+assert(flowAt(lowerFev1Curve,0.50) <= flowAt(emphCurve,0.50), 'Reducir VEF1 no debe eliminar la excavación obstructiva');
+assert(Math.abs(lowerFev1Curve.inspiration[0].volume - lowerFev1Curve.expiration.at(-1).volume) < 1e-9, 'La inspiración debe nacer exactamente en el final de la espiración');
+console.log('✓ 12 comprobaciones aprobadas');

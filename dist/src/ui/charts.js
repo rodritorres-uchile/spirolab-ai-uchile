@@ -34,7 +34,17 @@ export function drawFlowChart(svg, data, predicted, options = {}) {
     svg.append(el('path', { d: pathData(pred, x, y, 'volume', 'flow'), class: 'pred-line' }));
   }
   svg.append(el('path', { d: pathData(data.expiration, x, y, 'volume', 'flow'), class: 'main-line' }));
-  svg.append(el('path', { d: pathData(data.inspiration, x, y, 'volume', 'flow'), class: 'main-line inspiration' }));
+  const inspirationPath = el('path', { d: pathData(data.inspiration, x, y, 'volume', 'flow'), class: 'main-line inspiration', 'marker-end': 'url(#inspirationArrow)' });
+  const defs = el('defs');
+  const marker = el('marker', { id: 'inspirationArrow', markerWidth: 7, markerHeight: 7, refX: 5.8, refY: 3.5, orient: 'auto', markerUnits: 'strokeWidth' });
+  marker.append(el('path', { d: 'M0,0 L7,3.5 L0,7 z', class: 'inspiration-arrow' }));
+  defs.append(marker); svg.append(defs);
+  svg.append(inspirationPath);
+  const inspStart = data.inspiration[0];
+  const inspEnd = data.inspiration.at(-1);
+  svg.append(el('circle', { cx: x(inspStart.volume), cy: y(inspStart.flow), r: 4.5, class: 'insp-start' }));
+  const startLabel = el('text', { x: x(inspStart.volume)-6, y: y(0)+18, class: 'insp-label', 'text-anchor': 'end' }); startLabel.textContent = 'Inicio inspiración'; svg.append(startLabel);
+  svg.append(el('circle', { cx: x(inspEnd.volume), cy: y(inspEnd.flow), r: 3.5, class: 'insp-end' }));
   if (options.showPoints) for (const p of data.expiration.filter((_, i) => i % 30 === 0)) svg.append(el('circle', { cx: x(p.volume), cy: y(p.flow), r: 3, class: 'point' }));
   const xLabel = el('text', { x: width / 2, y: height - 3, class: 'label', 'text-anchor': 'middle' }); xLabel.textContent = 'Volumen (L)'; svg.append(xLabel);
   const yLabel = el('text', { x: 15, y: height / 2, class: 'label', transform: `rotate(-90 15 ${height / 2})`, 'text-anchor': 'middle' }); yLabel.textContent = 'Flujo (L/s)'; svg.append(yLabel);
