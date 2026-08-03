@@ -1,11 +1,22 @@
-# SpiroLab AI-UCH v0.6.1
+# SpiroLab AI-UCH v1.0 alpha
 
-## Cambios
+Repositorio completo de la plataforma educativa de simulación de espirometría.
 
-- CurveEngine 2.1: casquete C1 alrededor del PEF, sin vértice ni sobrepaso del PEF.
-- Corrección del signo del ajuste temprano del solver.
-- CVIF/FIVC editable y representada en la rama inspiratoria.
-- Evaluación ATS/ERS 2019 de CVIF − CVF: menor que 0,100 L o 5% de la CVF, el valor mayor, cuando CVIF supera CVF.
-- Panel de calidad actualizado.
+## Publicar en GitHub Pages
 
-Motor educativo. Las ecuaciones predictivas son aproximaciones demostrativas y no deben utilizarse para decisiones clínicas.
+La raíz ya contiene `index.html`, `src/` y `styles/`. Configure Pages como **Deploy from a branch → main → /(root)**.
+
+## Pruebas y compilación
+
+No requiere instalar dependencias:
+
+```bash
+npm test
+npm run build
+```
+
+`dist/` contiene una copia lista para publicación.
+
+## Advertencia
+
+Las ecuaciones de referencia son aproximaciones educativas aisladas en `src/core/reference-engine.js`. No usar para decisiones clínicas hasta sustituirlas por implementaciones oficiales y validar todo el motor.
