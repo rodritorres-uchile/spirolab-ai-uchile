@@ -1,6 +1,8 @@
 # Arquitectura
 
-1. **Reference engine**: interfaz común para GLI 2022, GLI 2012, Knudson y Gutiérrez.
-2. **Curve solver**: CVF, VEF1 y PEF son restricciones prioritarias; FEF25/50/75 son restricciones blandas en modo avanzado.
-3. **Interpretation engine**: clasificación por LLN/z-score; restricción y patrón mixto se expresan como probables hasta confirmar TLC.
-4. **UI**: independiente del motor y reemplazable sin alterar la matemática.
+- `index.html`: bundle autocontenido estable para publicación.
+- `src/core/reference-engine.mjs`: contrato único para las ecuaciones de referencia.
+- `src/core/pathology-engine.mjs`: generación de perfiles fisiopatológicos sin acoplamiento con la interfaz.
+- `tests`: pruebas de regresión para impedir errores como llamadas inexistentes a `predict`.
+
+La siguiente migración separará el motor de curvas, la interpretación y la calidad técnica manteniendo la interfaz pública compatible.
