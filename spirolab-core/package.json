@@ -1,8 +1,0 @@
-{
-  "name": "@spirolab/core",
-  "version": "1.0.0",
-  "type": "module",
-  "exports": "./src/index.js",
-  "description": "Motor matemático y de interpretación de SpiroLab AI-UCH",
-  "license": "MIT"
-}
