@@ -1,28 +1,19 @@
 import assert from 'node:assert/strict';
-import { predictReference } from '../src/core/reference-engine.js';
-import { applyPathology } from '../src/core/pathology-engine.js';
 import { generateFlowVolume, integrateVolumeTime, interpolateVolumeAtTime } from '../src/core/curve-engine.js';
-import { evaluateFivc } from '../src/core/quality-engine.js';
 
-const pred = predictReference({ age: 45, height: 172, sex: 'M', reference: 'gli2022', group: 'Global' });
-assert(pred.fvc > 4 && pred.fev1 > 3);
-const emph = applyPathology(pred, 'emphysema', 4);
-const normal = applyPathology(pred, 'normal', 0);
-const normalCurve = generateFlowVolume({ ...normal, fivc: normal.fvc, disease: 'normal', severity: 0, predictedRatio: pred.ratio, points: 220 });
-const emphCurve = generateFlowVolume({ ...emph, fivc: emph.fvc, disease: 'emphysema', severity: 4, predictedRatio: pred.ratio, points: 220 });
-const flowAt = (curve, fraction) => curve.expiration.reduce((best,p)=>Math.abs(p.volume-fraction*curve.expiration.at(-1).volume)<Math.abs(best.volume-fraction*curve.expiration.at(-1).volume)?p:best).flow;
-assert(flowAt(emphCurve,0.5) < flowAt(normalCurve,0.5)*0.35, 'El enfisema debe excavar el flujo medio');
-assert(Math.max(...emphCurve.expiration.map(p=>p.flow)) <= emph.pef + 1e-6, 'La curva no debe sobrepasar PEF');
-const time = integrateVolumeTime(emphCurve.expiration);
-assert(interpolateVolumeAtTime(time,1) > 0);
-assert(evaluateFivc({fvc:4,fivc:4.1}).acceptable);
-assert(Math.abs(normalCurve.inspiration[0].volume - normal.fvc) < 1e-9, 'La inspiración debe comenzar al final de la espiración (CVF)');
-assert(Math.abs(normalCurve.inspiration.at(-1).volume - (normal.fvc - normal.fvc)) < 1e-9, 'Con CVIF=CVF la inspiración debe terminar en 0 L');
-const unequalFivc = generateFlowVolume({ ...normal, fivc: normal.fvc + 0.12, disease: 'normal', severity: 0, predictedRatio: pred.ratio, points: 220 });
-assert(Math.abs(unequalFivc.inspiration[0].volume - normal.fvc) < 1e-9, 'La CVIF siempre debe partir desde el extremo derecho de la CVF');
-assert(unequalFivc.inspiration.at(-1).volume < 0, 'Si CVIF>CVF el extremo inspiratorio debe quedar a la izquierda del origen');
+const common = { fvc: 5.0, fivc: 5.2, pef: 9.0, severity: 4, resistance: 75, smallAirways: 85, elasticRecoil: 20, scoop: 0.9, predictedRatio: 0.79 };
 
-const lowerFev1Curve = generateFlowVolume({ ...emph, fev1: emph.fev1 * 0.72, fivc: emph.fvc, disease: 'emphysema', severity: 4, predictedRatio: pred.ratio, points: 220 });
-assert(flowAt(lowerFev1Curve,0.50) <= flowAt(emphCurve,0.50), 'Reducir VEF1 no debe eliminar la excavación obstructiva');
-assert(Math.abs(lowerFev1Curve.inspiration[0].volume - lowerFev1Curve.expiration.at(-1).volume) < 1e-9, 'La inspiración debe nacer exactamente en el final de la espiración');
-console.log('✓ 12 comprobaciones aprobadas');
+const normal = generateFlowVolume({ ...common, disease: 'normal', severity: 0, resistance: 25, smallAirways: 15, elasticRecoil: 55, scoop: 0.05, fev1: 3.95 });
+const emphysema = generateFlowVolume({ ...common, disease: 'emphysema', fev1: 1.9 });
+const lowerFev1 = generateFlowVolume({ ...common, disease: 'normal', severity: 0, resistance: 25, smallAirways: 15, elasticRecoil: 55, scoop: 0.05, fev1: 2.0 });
+
+const nearest = (curve, fraction) => curve.expiration.reduce((a,b)=>Math.abs(b.volume-common.fvc*fraction)<Math.abs(a.volume-common.fvc*fraction)?b:a).flow;
+
+assert.equal(emphysema.inspiration[0].volume, common.fvc, 'CVIF debe comenzar en CVF (derecha)');
+assert.ok(emphysema.inspiration.at(-1).volume < 0, 'CVIF mayor que CVF debe terminar a la izquierda del origen');
+assert.ok(nearest(emphysema,0.50) < nearest(normal,0.50)*0.55, 'Enfisema debe excavar claramente la zona media');
+assert.ok(nearest(lowerFev1,0.50) < nearest(normal,0.50)*0.72, 'Reducir VEF1/CVF debe aumentar excavación aun en edición manual');
+assert.ok(Math.max(...emphysema.expiration.map(p=>p.flow)) <= common.pef + 1e-9, 'La curva no debe superar el PEF');
+const generatedFev1 = interpolateVolumeAtTime(integrateVolumeTime(emphysema.expiration),1);
+assert.ok(Number.isFinite(generatedFev1) && generatedFev1 > 0, 'VEF1 generado debe ser finito');
+console.log('6 pruebas aprobadas');

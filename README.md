@@ -1,27 +1,16 @@
-# SpiroLab AI-UCH v1.0 alpha
+# SpiroLab AI-UCH v1.0 alpha4
 
-Repositorio completo de la plataforma educativa de simulación de espirometría.
+Versión completa para GitHub Pages con dos correcciones principales:
 
-## Publicar en GitHub Pages
+1. **CVIF correctamente orientada**: la rama inspiratoria comienza en el final de la espiración (CVF, extremo derecho) y avanza hacia la izquierda.
+2. **CurveEngine por cuatro regiones restaurado**: ascenso al PEF, caída pos-PEF, zona media excavada y cola terminal. La excavación aumenta automáticamente al disminuir VEF1/CVF y el solver no puede enderezar la zona media/terminal.
 
-La raíz ya contiene `index.html`, `src/` y `styles/`. Configure Pages como **Deploy from a branch → main → /(root)**.
+## Publicación
 
-## Pruebas y compilación
+Copiar todo el contenido de esta carpeta a la raíz del repositorio, hacer commit y push. GitHub Pages debe apuntar a `main` y `/(root)`.
 
-No requiere instalar dependencias:
+## Validación incluida
 
-```bash
-npm test
-npm run build
-```
+`npm test` ejecuta comprobaciones de dirección de CVIF, límite de PEF y excavación dependiente del VEF1.
 
-`dist/` contiene una copia lista para publicación.
-
-## Advertencia
-
-Las ecuaciones de referencia son aproximaciones educativas aisladas en `src/core/reference-engine.js`. No usar para decisiones clínicas hasta sustituirlas por implementaciones oficiales y validar todo el motor.
-
-
-## Corrección alpha 2 — dirección de la CVIF
-
-La rama inspiratoria comienza en el extremo final de la curva espiratoria (CVF, lado derecho) y progresa de derecha a izquierda. Si CVIF = CVF, termina en 0 L. Si CVIF difiere de CVF, el extremo inspiratorio queda desplazado respecto del origen por CVF − CVIF.
+> Herramienta educativa en desarrollo. No usar para decisiones clínicas.
