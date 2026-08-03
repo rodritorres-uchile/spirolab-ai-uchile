@@ -142,7 +142,7 @@ function interpret(measured,pred){
 
 
 
-const $=s=>document.querySelector(s); const $=s=>[...document.querySelectorAll(s)];
+const $=s=>document.querySelector(s); const $$=s=>[...document.querySelectorAll(s)];
 const state={age:45,height:172,sex:'M',population:'adult',reference:'gli2022',group:'Global',
   fvc:4.4,fev1:3.45,pef:9.2,mode:'linked',fef25:7.2,fef50:4.5,fef75:1.7,pattern:'normal',showPred:true};
 
@@ -207,7 +207,7 @@ function render(){
   ];
   $('#resultsBody').innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td>${fmt(r[1],r[0].includes('/')?3:2)} ${r[4]}</td><td>${r[2]==null?'—':fmt(r[2],r[0].includes('/')?3:2)}</td><td>${r[2]==null?'—':fmt(r[1]/r[2]*100,0)+'%'}</td><td>${r[3]==null?'—':fmt(r[3],2)}</td></tr>`).join('');
   ['fvc','fev1','pef','fef25','fef50','fef75'].forEach(k=>{const el=$(`#${k}`);if(document.activeElement!==el)el.value=state[k];const out=$(`#${k}Out`);if(out)out.textContent=fmt(state[k],k==='pef'?1:2)});
-  $('.advanced-only').forEach(el=>el.hidden=linked); $('#modeLinked').classList.toggle('active',linked);$('#modeAdvanced').classList.toggle('active',!linked);
+  $$('.advanced-only').forEach(el=>el.hidden=linked); $('#modeLinked').classList.toggle('active',linked);$('#modeAdvanced').classList.toggle('active',!linked);
   $('#consistency').innerHTML=`<b>Coherencia interna:</b> ${fmt(solver.coherence,0)}% · VEF₁ generado ${fmt(solver.generatedFev1)} L · error ${fmt(solver.error*1000,0)} mL · α ${fmt(solver.alpha,2)}`;
   drawChart($('#flowChart'),solver,pred,'fv');drawChart($('#timeChart'),solver,pred,'vt');
 }
@@ -217,11 +217,11 @@ function bind(){
   ['sex','population','reference','group'].forEach(k=>$('#'+k).addEventListener('change',e=>{state[k]=e.target.value;if(k==='reference')state.group=referenceCatalog[state.reference].groups[0];render()}));
   $('#modeLinked').onclick=()=>setState('mode','linked');$('#modeAdvanced').onclick=()=>setState('mode','advanced');
   $('#showPred').onchange=e=>setState('showPred',e.target.checked);
-  $('.preset').forEach(b=>b.onclick=()=>{Object.assign(state,presets[b.dataset.preset]);render()});
+  $$('.preset').forEach(b=>b.onclick=()=>{Object.assign(state,presets[b.dataset.preset]);render()});
   $('#fullscreen').onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();
   $('#print').onclick=()=>window.print();
   $('#share').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);$('#share').textContent='Enlace copiado';setTimeout(()=>$('#share').textContent='Compartir',1400)}catch{}}
-  $('.nav-btn').forEach(b=>b.onclick=()=>{$('.nav-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('.module').forEach(x=>x.hidden=true);$('#'+b.dataset.module).hidden=false});
+  $$('.nav-btn').forEach(b=>b.onclick=()=>{$$('.nav-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');$$('.module').forEach(x=>x.hidden=true);$('#'+b.dataset.module).hidden=false});
 }
 
 bind();render();
