@@ -9,14 +9,18 @@ const pathData = (points, xScale, yScale, xKey, yKey) => points.map((p, i) => `$
 export function drawFlowChart(svg, data, predicted, options = {}) {
   const width = 780, height = 420, margin = { left: 55, right: 20, top: 20, bottom: 45 };
   svg.setAttribute('viewBox', `0 0 ${width} ${height}`); svg.innerHTML = '';
-  const maxVolume = Math.max(data.expiration.at(-1).volume, data.inspiration[0].volume, predicted?.fvc ?? 0) * 1.15;
+  const rawMinVolume = Math.min(0, ...data.inspiration.map(p => p.volume));
+  const rawMaxVolume = Math.max(data.expiration.at(-1).volume, ...data.inspiration.map(p => p.volume), predicted?.fvc ?? 0);
+  const volumeSpan = Math.max(0.5, rawMaxVolume - rawMinVolume);
+  const minVolume = rawMinVolume - volumeSpan * 0.05;
+  const maxVolume = rawMaxVolume + volumeSpan * 0.10;
   const maxFlow = Math.max(...data.expiration.map(p => p.flow), predicted?.pef ?? 0) * 1.25;
   const minFlow = -Math.max(...data.inspiration.map(p => Math.abs(p.flow))) * 1.25;
-  const x = v => margin.left + (v / maxVolume) * (width - margin.left - margin.right);
+  const x = v => margin.left + ((v - minVolume) / (maxVolume - minVolume)) * (width - margin.left - margin.right);
   const y = f => margin.top + ((maxFlow - f) / (maxFlow - minFlow)) * (height - margin.top - margin.bottom);
   svg.append(el('rect', { x: 0, y: 0, width, height, class: 'chart-bg' }));
   for (let i = 0; i <= 6; i++) {
-    const xv = maxVolume * i / 6; svg.append(el('line', { x1: x(xv), y1: margin.top, x2: x(xv), y2: height - margin.bottom, class: 'grid' }));
+    const xv = minVolume + (maxVolume - minVolume) * i / 6; svg.append(el('line', { x1: x(xv), y1: margin.top, x2: x(xv), y2: height - margin.bottom, class: 'grid' }));
     const tx = el('text', { x: x(xv), y: height - 18, class: 'tick', 'text-anchor': 'middle' }); tx.textContent = xv.toFixed(1); svg.append(tx);
   }
   for (let i = 0; i <= 6; i++) {

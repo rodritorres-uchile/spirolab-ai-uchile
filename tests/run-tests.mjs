@@ -16,4 +16,10 @@ assert(Math.max(...emphCurve.expiration.map(p=>p.flow)) <= emph.pef + 1e-6, 'La 
 const time = integrateVolumeTime(emphCurve.expiration);
 assert(interpolateVolumeAtTime(time,1) > 0);
 assert(evaluateFivc({fvc:4,fivc:4.1}).acceptable);
-console.log('✓ 6 comprobaciones aprobadas');
+assert(Math.abs(normalCurve.inspiration[0].volume - normal.fvc) < 1e-9, 'La inspiración debe comenzar al final de la espiración (CVF)');
+assert(Math.abs(normalCurve.inspiration.at(-1).volume - (normal.fvc - normal.fvc)) < 1e-9, 'Con CVIF=CVF la inspiración debe terminar en 0 L');
+const unequalFivc = generateFlowVolume({ ...normal, fivc: normal.fvc + 0.12, disease: 'normal', severity: 0, points: 220 });
+assert(Math.abs(unequalFivc.inspiration[0].volume - normal.fvc) < 1e-9, 'La CVIF siempre debe partir desde el extremo derecho de la CVF');
+assert(unequalFivc.inspiration.at(-1).volume < 0, 'Si CVIF>CVF el extremo inspiratorio debe quedar a la izquierda del origen');
+
+console.log('✓ 10 comprobaciones aprobadas');

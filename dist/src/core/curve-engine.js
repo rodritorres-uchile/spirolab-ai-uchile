@@ -54,7 +54,10 @@ export function generateFlowVolume({ fvc, fivc, pef, disease, severity, resistan
   const inspiration = [];
   for (let i = 0; i <= points; i += 1) {
     const t = i / points;
-    const volume = fivc * (1 - t);
+    // La inspiración comienza donde termina la espiración (CVF, a la derecha)
+    // y avanza de derecha a izquierda una distancia igual a la CVIF.
+    // Si CVIF = CVF, termina en 0 L; si difiere, el extremo refleja esa diferencia.
+    const volume = fvc - t * fivc;
     // Inspiración asimétrica y suave, no una parábola perfecta.
     const flow = -pef * 0.55 * Math.pow(Math.sin(Math.PI * t), 0.85) * (0.88 + 0.12 * t);
     inspiration.push({ volume, flow });

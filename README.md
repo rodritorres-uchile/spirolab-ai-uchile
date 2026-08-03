@@ -20,3 +20,8 @@ npm run build
 ## Advertencia
 
 Las ecuaciones de referencia son aproximaciones educativas aisladas en `src/core/reference-engine.js`. No usar para decisiones clínicas hasta sustituirlas por implementaciones oficiales y validar todo el motor.
+
+
+## Corrección alpha 2 — dirección de la CVIF
+
+La rama inspiratoria comienza en el extremo final de la curva espiratoria (CVF, lado derecho) y progresa de derecha a izquierda. Si CVIF = CVF, termina en 0 L. Si CVIF difiere de CVF, el extremo inspiratorio queda desplazado respecto del origen por CVF − CVIF.
